@@ -1,53 +1,66 @@
-<?php echo view('layouts/admin_header') ?>
-
-<?php echo view('layouts/admin_navbar') ?>
-
-<div class="container">
-    <h2>Add Product</h2>
-    <form action="<?= site_url('admin/add_product') ?>" method="post" enctype="multipart/form-data">
-    <?= csrf_field() ?> <!-- Add this line -->
-        <div>
-            <label>Product Name</label>
-            <input type="text" name="name" required>
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white">
+            <h4 class="mb-0">Add Product</h4>
         </div>
+        <div class="card-body">
+            <form action="<?= site_url('admin/add_product') ?>" method="post" enctype="multipart/form-data">
+                <?= csrf_field() ?>
 
-        <div>
-            <label>Product Category</label>
-            <select name="category" id="categorySelect" required>
-                <option value="">-- Select Category --</option>
-                <?php foreach ($categories as $category): ?>
-                    <option value="<?= esc($category['id']) ?>">
-                        <?= esc($category['name']) ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-        </div>
+                <!-- Product Name -->
+                <div class="mb-3">
+                    <label for="name" class="form-label">Product Name</label>
+                    <input type="text" name="name" id="name" class="form-control" required>
+                </div>
 
-        <div>
-            <label>Category Spaces</label>
-            <div id="categorySpacesContainer"></div> <!-- This will be populated dynamically based on the selected category -->
-            
-        </div>
-        <div>
-            <label>Description</label>
-            <input type="text" name="description" required>
-        </div>
+                <!-- Product Category -->
+                <div class="mb-3">
+                    <label for="categorySelect" class="form-label">Product Category</label>
+                    <select name="category" id="categorySelect" class="form-select" required>
+                        <option value="">-- Select Category --</option>
+                        <?php foreach ($categories as $category): ?>
+                            <option value="<?= esc($category['id']) ?>">
+                                <?= esc($category['name']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
 
-        <div>
-            <label>Price</label>
-            <input type="number" name="price" step="0.01" required>
-        </div>
+                <!-- Dynamic Specs Area -->
+                <div class="mb-3">
+                    <label class="form-label">Category Specs</label>
+                    <div id="categorySpacesContainer" class="row g-2">
+                        <!-- JavaScript will populate based on category -->
+                    </div>
+                </div>
 
-        <div>
-            <label>Image</label>
-            <input type="file" name="image" required>
-        </div>
+                <!-- Description -->
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <input type="text" name="description" id="description" class="form-control" required>
+                </div>
 
-        <div>
-            <button type="submit">Save Product</button>
+                <!-- Price -->
+                <div class="mb-3">
+                    <label for="price" class="form-label">Price (LKR)</label>
+                    <input type="number" name="price" id="price" class="form-control" step="0.01" required>
+                </div>
+
+                <!-- Image Upload -->
+                <div class="mb-4">
+                    <label for="image" class="form-label">Product Image</label>
+                    <input type="file" name="image" id="image" class="form-control" required>
+                </div>
+
+                <!-- Submit -->
+                <div class="text-end">
+                    <button type="submit" class="btn btn-primary px-4">Save Product</button>
+                </div>
+            </form>
         </div>
-    </form>
+    </div>
 </div>
+
 
 <script>
     

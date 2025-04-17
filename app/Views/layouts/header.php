@@ -18,7 +18,8 @@
                 
                 <!-- Logo -->
                 <a href="#!" class="d-flex align-items-center mb-2 mb-md-0">
-                    <img src="asset/Images/Logo.png" height="80" width="80" alt="Logo">
+                    <img src="<?= base_url('asset/Images/Logo.png') ?>" height="80" width="80" alt="Logo">
+
                 </a>
                 
                 <!-- Search and Icons -->
@@ -37,9 +38,27 @@
                         <a href="/login" class="icon-link" title="Account">
                             <i class="bi bi-person-fill"></i>
                         </a>
-                        <a href="#" class="icon-link position-relative" title="Cart">
+                        <!--a href="#" class="icon-link position-relative" title="Cart">
                             <i class="bi bi-cart"></i>
                             <span class="cart-count">3</span>
+                        </a-->
+
+                        <?php
+                            use App\Models\CartModel;
+
+                            $cartCount = 0;
+                            if (session()->get('logged_in')) {
+                                $cartModel = new CartModel();
+                                $cartCount = $cartModel->where('user_id', session()->get('user_id'))->countAllResults();
+                            }
+                        ?>
+                        <a href="<?= base_url('cart') ?>" class="icon-link position-relative" title="Cart">
+                            <i class="bi bi-cart"></i>
+                            <?php if ($cartCount > 0): ?>
+                                <span class="cart-count bg-danger">
+                                    <?= $cartCount ?>
+                                </span>
+                            <?php endif; ?>
                         </a>
                     </div>
                 </div>

@@ -4,7 +4,7 @@ use App\Models\ProductModel;
 use App\Models\CategoryModel;
 use App\Models\ProductSpaceModel;
 use CodeIgniter\Controller;
-
+use Config\View;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
@@ -126,7 +126,7 @@ class AdminProducts extends Controller{
  
 
     
-        return redirect()->to('/adminp')->with('message', 'Product and specs added successfully!');
+        return redirect()->to('/manageProducts')->with('message', 'Product and specs added successfully!');
     }
     
 /*
@@ -195,6 +195,71 @@ class AdminProducts extends Controller{
         // Output to browser (force download)
         $dompdf->stream("products.pdf", ["Attachment" => true]);
     }
-    
+
+
+
+        public function get_product_details($id)
+        {
+            $productModel = new \App\Models\ProductModel(); // adjust if needed
+            $product = $productModel->find($id);
+
+            if ($product) {
+                return $this->response->setJSON($product);
+            } else {
+                return $this->response->setStatusCode(404)->setJSON(['error' => 'Product not found']);
+            }
+        }
+
+        public function update_product()
+        {
+            $productModel = new \App\Models\ProductModel();
+            $id = $this->request->getPost('product_id');  
+
+            $data = [
+                'name'        => $this->request->getPost('name'),
+                'price'       => $this->request->getPost('price'),
+                'description' => $this->request->getPost('description'),
+            ];
+
+            if ($productModel->update($id, $data)) {
+                return redirect()->back()->with('message', 'Product updated successfully!');
+            } else {
+                return redirect()->back()->with('error', 'Update failed');
+            }
+        }
+
+        public function delete_product()
+        {
+            $productModel = new \App\Models\ProductModel();
+            $productId = $this->request->getPost('product_id');
+        
+            $db = \Config\Database::connect();
+        
+            try {
+                // Start Transaction
+                $db->transStart();
+        
+                // Delete related records
+                $db->table('product_sales')->where('product_id', $productId)->delete();
+                $db->table('product_specs')->where('product_id', $productId)->delete(); // Make sure this is correct
+                $db->table('user_cart')->where('product_id', $productId)->delete();
+        
+                // Delete the product itself
+                $productModel->delete($productId);
+        
+                // Complete transaction
+                $db->transComplete();
+        
+                if ($db->transStatus() === false) {
+                    return redirect()->back()->with('error', 'Failed to delete product due to a database error.');
+                }
+        
+                return redirect()->back()->with('message', 'Product deleted successfully.');
+            } catch (\Exception $e) {
+                return redirect()->back()->with('error', 'An unexpected error occurred: ' . $e->getMessage());
+            }
+        }
+        
+
 } 
 

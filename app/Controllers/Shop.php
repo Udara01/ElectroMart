@@ -92,6 +92,7 @@ class Shop extends BaseController
         ];
 
         echo view('layouts/header');
+        echo View('layouts/navbar');
         echo view('pages/shop', $data);
     }
 }

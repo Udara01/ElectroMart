@@ -64,4 +64,22 @@ class ProductModel extends Model
 
         return $builder->findAll();
     }
+
+        // In ProductModel.php
+        public function getTopSelling($limit = 8, $minSales = 10)
+        {
+            return $this->select('products.*, product_sales.quantity_sold')
+                ->join('product_sales', 'product_sales.product_id = products.id')
+                ->where('product_sales.quantity_sold >=', $minSales)
+                ->orderBy('product_sales.quantity_sold', 'DESC')
+                ->limit($limit)
+                ->findAll();
+        }
+
+        public function getNewProducts($limit = 8)
+            {
+                return $this->orderBy('created_at', 'DESC')->limit($limit)->findAll();
+            }
+
 }
+

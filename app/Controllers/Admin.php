@@ -9,10 +9,35 @@ class Admin extends BaseController
 {
     public function index()
     {   
-        echo view('layouts/header');
-        echo session()->getFlashdata('message') ? '<p style="color: green;">'.session()->getFlashdata('message').'</p>' : '';
-        echo view('admin/add_product');
+        //echo view('layouts/header');
+        //echo session()->getFlashdata('message') ? '<p style="color: green;">'.session()->getFlashdata('message').'</p>' : '';
+        //echo view('admin/add_product');
+
+        return view('admin/landing');
+
     }
+
+    public function login()
+    {
+        $email = $this->request->getPost('email');
+        $password = $this->request->getPost('password');
+
+        // Example hardcoded login - replace with DB check later
+        if ($email === 'admin@example.com' && $password === 'admin123') {
+            session()->set('isAdminLoggedIn', true);
+            return redirect()->to('/manageProducts')->with('message', 'Login successful!');
+
+        } else {
+            return redirect()->back()->with('error', 'Invalid credentials');
+        }
+    }
+
+    public function logout()
+    {
+        session()->destroy();
+        return redirect()->to('/admin');
+    }
+
 
 // This function is used to add a product to the database
 // It gets the data from the form and saves it to the database using the ProductModel
@@ -56,5 +81,7 @@ class Admin extends BaseController
         echo view('layouts/header');
         echo view('admin/product_list', $data); //pass the data to the view
     }
+
+
 }
        

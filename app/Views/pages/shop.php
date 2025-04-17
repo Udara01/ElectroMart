@@ -43,7 +43,7 @@
                 <h5>Filter by</h5>
 
                 <div class="mb-3">
-                    <label>Department:</label>
+                    <label>Categories:</label>
                     <select name="department" class="form-select" onchange="this.form.submit()">
                         <option value="all">All</option>
                         <?php foreach ($categories as $category): ?>
@@ -126,6 +126,7 @@
                                         data-bs-toggle="modal"
                                         data-bs-target="#productDetailModal"
                                         data-product="<?= htmlspecialchars(json_encode([
+                                        'id' => $product['id'], 
                                         'name' => $product['name'],
                                         'description' => $product['description'],
                                         'price' => $product['price'],
@@ -158,14 +159,16 @@
         <!-- Filled dynamically with JS -->
       </div>
       <div class="modal-footer">
-        <button class="btn btn-success">Add to Cart</button>
       </div>
     </div>
   </div>
 </div>
+
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('productDetailModal');
+    const modalFooter = modal.querySelector('.modal-footer'); // Get footer element
+
     modal.addEventListener('show.bs.modal', function (event) {
         const button = event.relatedTarget;
         const productData = JSON.parse(button.getAttribute('data-product'));
@@ -192,10 +195,19 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
 
-        document.getElementById('modalContent').innerHTML = content;
+       // document.getElementById('modalContent').innerHTML = content;
+       modalContent.innerHTML = content;
+
+        //Add to Cart button form
+        modalFooter.innerHTML = `
+            <form method="post" action="<?= base_url('cart/add') ?>">
+                <input type="hidden" name="product_id" value="${productData.id}">
+                <button type="submit" class="btn btn-success">Add to Cart</button>
+            </form>
+        `;
     });
 });
 </script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+
 </body>
 </html>
