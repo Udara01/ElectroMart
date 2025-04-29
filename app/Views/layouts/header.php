@@ -8,7 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <!-- Custom CSS -->
+    
     <link rel="stylesheet" href="/asset/Styles/header.css">
 </head>
 <body> 
@@ -17,7 +17,7 @@
             <div class="d-flex flex-column flex-md-row align-items-center justify-content-between py-2">
                 
                 <!-- Logo -->
-                <a href="#!" class="d-flex align-items-center mb-2 mb-md-0">
+                <a href="/home" class="d-flex align-items-center mb-2 mb-md-0">
                     <img src="<?= base_url('asset/Images/Logo.png') ?>" height="80" width="80" alt="Logo">
 
                 </a>
@@ -26,22 +26,42 @@
                 <div class="search-container w-100 mt-2 mt-md-0 d-flex align-items-center justify-content-center">
                     <div class="input-group search-box w-75">
                         <input type="text" class="form-control search-input" placeholder="Search...">
+                        <a href="cart" class="icon-link position-relative" title="Cart">
                         <span class="input-group-text bg-white border-start-0">
                             <i class="bi bi-search text-secondary"></i>
                         </span>
+                        </a>
                     </div>   
 
                     <div class="icon-container ms-3">
                         <a href="#" class="icon-link" title="Wishlist">
                             <i class="bi bi-heart"></i>
                         </a>
-                        <a href="/login" class="icon-link" title="Account">
+                        <!--a href="/login" class="icon-link" title="Account">
                             <i class="bi bi-person-fill"></i>
-                        </a>
+                        </a-->
                         <!--a href="#" class="icon-link position-relative" title="Cart">
                             <i class="bi bi-cart"></i>
                             <span class="cart-count">3</span>
                         </a-->
+                        <?php if (session()->get('logged_in')): ?>
+   
+                            <div class="dropdown">
+                                <a href="#" class="icon-link dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-person-circle"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                    <li><a class="dropdown-item" href="<?= base_url('profile') ?>">Profile</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="<?= base_url('logout') ?>">Logout</a></li>
+                                </ul>
+                            </div>
+                        <?php else: ?>
+                            
+                            <a href="/login" class="icon-link" title="Account">
+                                <i class="bi bi-person-fill"></i>
+                            </a>
+                        <?php endif; ?>
 
                         <?php
                             use App\Models\CartModel;

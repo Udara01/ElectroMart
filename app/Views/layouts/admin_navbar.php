@@ -12,7 +12,7 @@
           <a class="nav-link" href="/manageProducts">Manage Products</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/admin/categories">Manage Categories</a>
+          <a class="nav-link" href="/manage_sc">Manage Categories</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/admin/orders">View Orders</a>

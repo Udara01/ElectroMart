@@ -49,7 +49,7 @@
           <div>
             <h5 class="card-title"><?= esc($product['name']) ?></h5>
             <p class="card-text"><?= esc($product['description']) ?></p>
-            <p class="card-text"><strong>$<?= esc($product['price']) ?></strong></p>
+            <p class="card-text"><strong>Rs.<?= esc($product['price']) ?></strong></p>
           </div>
           <button
                         class="btn btn-primary mt-2"
@@ -125,8 +125,8 @@
     </div>
   </div>
 </div>
-<script>
-  
+
+<script>  
   document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('productDetailModal');
     const modalContent = document.getElementById('modalContent');
@@ -160,7 +160,7 @@
 
         modalContent.innerHTML = content;
 
-        //Add to Cart button form
+        
         modalFooter.innerHTML = `
             <form method="post" action="<?= base_url('cart/add') ?>">
                 <input type="hidden" name="product_id" value="${productData.id}">
@@ -169,10 +169,8 @@
         `;
     });
 });
-
 </script>
 
-<!-- Bootstrap Bundle JS -->
 </body>
 </html>
 

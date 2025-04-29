@@ -1,8 +1,8 @@
 <div class="card p-4">
-    <?php if (session()->getFlashdata('error')): ?>
-        <div class="alert alert-danger"><?= session()->getFlashdata('error') ?></div>
-    <?php elseif (session()->getFlashdata('message')): ?>
-        <div class="alert alert-success"><?= session()->getFlashdata('message') ?></div>
+    <?php if (session()->getFlashdata('update_error')): ?>
+        <div class="alert alert-danger"><?= session()->getFlashdata('update_error') ?></div>
+    <?php elseif (session()->getFlashdata('update_message')): ?>
+        <div class="alert alert-success"><?= session()->getFlashdata('update_message') ?></div>
     <?php endif; ?>
 
     <h4 class="mb-3">Update Product</h4>
@@ -33,7 +33,8 @@
             <input type="text" name="description" class="form-control">
         </div>
 
-        
+        <div id="specs-container"></div>
+
 
         <button type="submit" class="btn btn-success">Update Product</button>
     </form>
@@ -58,3 +59,34 @@ document.querySelector('select[name="product_id"]').addEventListener('change', f
 });
 </script>
 
+<script>
+document.querySelector('select[name="product_id"]').addEventListener('change', function () {
+    let productId = this.value;
+
+    if (productId) {
+        fetch(`/admin/get_product_details/${productId}`)
+            .then(response => response.json())
+            .then(data => {
+                // Fill basic product data
+                const product = data.product;
+                const specs = data.specs;
+
+                document.querySelector('input[name="name"]').value = product.name || '';
+                document.querySelector('input[name="description"]').value = product.description || '';
+                document.querySelector('input[name="price"]').value = product.price || '';
+
+                const specsContainer = document.getElementById('specs-container');
+                specsContainer.innerHTML = ''; // Clear previous
+
+                for (let spec of specs) {
+                    specsContainer.innerHTML += `
+                        <div class="mb-2">
+                            <label>${spec.spec_key}</label>
+                            <input type="text" name="specs[${spec.id}]" class="form-control" value="${spec.spec_value}">
+                        </div>
+                    `;
+                }
+            });
+    }
+});
+</script>

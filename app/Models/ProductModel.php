@@ -2,37 +2,6 @@
 namespace App\Models;
 use CodeIgniter\Model;
 
-/*class ProductModel extends Model{
-
-    protected $table = 'products'; // Table name in the database work with the model
-    protected $primaryKey = 'id'; // Primary key of the table
-
-    protected $allowedFields = ['name', 'description', 'price', 'image']; // Fields that can be inserted or updated in the table
-}   //this imidiately give uv to acces to the all the crud operations in the table
-
-
-*/
-/*
-class ProductModel extends Model
-{
-    protected $table = 'products';
-    protected $primaryKey = 'id';
-    
-    protected $allowedFields = [
-        'name',
-        'description',
-        'price',
-        'image',
-        'category_name',
-        'created_at',
-        'category_id'
-    ];
-
-    //protected $useTimestamps = true;
-    //protected $createdField  = 'created_at';
-}
-*/
-// app/Models/ProductModel.php
 class ProductModel extends Model
 {
     protected $table = 'products';
@@ -65,7 +34,8 @@ class ProductModel extends Model
         return $builder->findAll();
     }
 
-        // In ProductModel.php
+        // Method to get the top-selling products
+        //Check product sales count is greater than the minimum sales count
         public function getTopSelling($limit = 8, $minSales = 10)
         {
             return $this->select('products.*, product_sales.quantity_sold')
@@ -76,6 +46,7 @@ class ProductModel extends Model
                 ->findAll();
         }
 
+        // Method to get the latest products
         public function getNewProducts($limit = 8)
             {
                 return $this->orderBy('created_at', 'DESC')->limit($limit)->findAll();

@@ -9,5 +9,5 @@ class CategoryModel extends Model{
     protected $primaryKey = 'id'; // Primary key of the table
 
     protected $allowedFields = ['name']; // Fields that can be inserted or updated in the table
-}   //this imidiately give uv to acces to the all the crud operations in the table
+} 
 

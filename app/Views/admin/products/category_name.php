@@ -5,7 +5,7 @@
     <h3>Categories:</h3>
     <ul>
         <?php foreach ($categories as $category): ?>
-            <li><?= esc($category['name']) ?></li>  <!-- Assuming each category has a 'name' field -->
+            <li><?= esc($category['name']) ?></li> 
         <?php endforeach; ?>
     </ul>
     

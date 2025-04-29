@@ -63,6 +63,26 @@ class UserAccount extends BaseController{
         }
     }
 
+    public function profile()
+{
+    if (!session()->get('logged_in')) {
+        return redirect()->to('/login')->with('error', 'Please login first.');
+    }
+
+    $userAccountModel = new UserAccountModel();
+    $user = $userAccountModel->find(session()->get('user_id'));
+
+    return view('auth/profile', ['user' => $user, 'title' => 'Your Profile']);
+}
+
+
+public function logout()
+{
+    session()->destroy(); // Destroys all session data
+    return redirect()->to('/login')->with('success', 'Logged out successfully!');
+}
+
+
 }
 ?>
 

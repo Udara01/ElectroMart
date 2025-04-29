@@ -2,24 +2,14 @@
 
 namespace App\Controllers;
 
+use App\Models\ProductModel;
+use App\Models\ProductSpaceModel;
+use App\Models\CategoryModel;
+use CodeIgniter\Controller;
+
 class Pages extends BaseController
 {
-    /*public function index(): string
-    {   
-        $meta_data = [
-            'title' => 'Home',
-            'description' => 'Welcome to our website!'
-        ];
 
-        $productModel = new \App\Models\ProductModel();
-        $data = array_merge($meta_data, [
-            'topSelling' => $productModel->getTopSelling(),
-            'newProducts' => $productModel->getNewProducts()
-        ]);
-        
-
-        return view('home', array_merge($meta_data, $data));
-    }*/
     public function index(): string
         {   
             $meta_data = [
@@ -27,9 +17,9 @@ class Pages extends BaseController
                 'description' => 'Welcome to our website!'
             ];
 
-            $productModel = new \App\Models\ProductModel();
-            $productSpaceModel = new \App\Models\ProductSpaceModel();
-            $categoryModel = new \App\Models\CategoryModel();
+            $productModel = new ProductModel();
+            $productSpaceModel = new ProductSpaceModel();
+            $categoryModel = new CategoryModel();
 
             // Get products
             $topSelling = $productModel->getTopSelling();
@@ -81,37 +71,11 @@ class Pages extends BaseController
         return view('pages/shop');
     }
 
-    /*public function manageProducts(): string{
-        $categoryModel = new \App\Models\CategoryModel(); // Make sure this is the correct model
-        $categories = $categoryModel->findAll(); // Get all categories
-
-        $productModel = new \App\Models\ProductModel();
-        $productSpaceModel = new \App\Models\ProductSpaceModel();
-    
-        $filters = [
-            'department' => $this->request->getGet('department'),
-            'price' => $this->request->getGet('price')
-        ];
-    
-        $data = [
-            'products' => $productModel->getFilteredProducts($filters),
-            'product_spaces' => $productSpaceModel->findAll(),
-            'categories' => $categoryModel->findAll(),
-            'filters' => $filters
-        ];
-
-        return view('admin/products/manage_products', [
-            'categories' => $categories,
-            'products' => $data['products'],
-            'product_spaces' => $data['product_spaces'],
-        ]);
-    }*/
-
     public function manageProducts(): string
 {
-    $categoryModel = new \App\Models\CategoryModel();
-    $productModel = new \App\Models\ProductModel();
-    $productSpaceModel = new \App\Models\ProductSpaceModel();
+    $categoryModel = new CategoryModel();
+    $productModel = new ProductModel();
+    $productSpaceModel = new ProductSpaceModel();
 
     $filters = [
         'department' => $this->request->getGet('department'),

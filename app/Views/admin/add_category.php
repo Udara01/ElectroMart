@@ -1,6 +1,5 @@
-
     <div>
-    <form method="post" action="<?= base_url('/admin/add_category') ?>">
+    <form method="post" action="<?= base_url('/add_category') ?>">
         <?= csrf_field() ?>
         <div class="mb-3">
             <label for="category_name" class="form-label">Category Name</label>

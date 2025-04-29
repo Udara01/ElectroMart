@@ -1,6 +1,6 @@
   <style>
     .category-btn {
-      background-color: #ffbf29;
+      background-color:rgb(16, 61, 223);
       color: white;
       font-weight: bold;
       padding: 10px 20px;
@@ -22,7 +22,7 @@
 
     .navbar-nav .nav-link.active,
     .navbar-nav .nav-link:hover {
-      color: orange;
+      color: rgb(16, 61, 223);
     }
   </style>
   <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
@@ -58,14 +58,13 @@
           <li class="nav-item"><a class="nav-link" href="#">Most Popular</a></li>
           <li class="nav-item"><a class="nav-link" href="#">On Sale</a></li>
           <li class="nav-item"><a class="nav-link" href="#">Computer & Laptop</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Home Appliances</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Contact Us</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">About Us</a></li>
+          <li class="nav-item"><a class="nav-link" href="/my-orders">Check Orders</a></li>
         </ul>
       </div>
     </div>
   </nav>
 
-  <!-- Bootstrap Bundle JS (required for dropdowns) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
 
 

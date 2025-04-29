@@ -20,9 +20,9 @@ class AdminProducts extends Controller{
         //$data = [
        //     'categories' => $categories
         //];
-        $data['categories'] = $categoryModel->findAll(); // Assign to $data array
+        $data['categories'] = $categoryModel->findAll(); 
     
-        return view('admin/products/add_product', $data);
+        //return view('admin/products/add_product', $data);
         //return view('admin/products/category_name', $data);
     }
 
@@ -71,6 +71,22 @@ class AdminProducts extends Controller{
 
     }
 */
+
+public function getCategorySpecifications($categoryId)
+{
+    $db = \Config\Database::connect();
+    $builder = $db->table('category_specifications');
+    $builder->select('specifications.name as spec_name'); // SELECT the specification name
+    $builder->join('specifications', 'specifications.id = category_specifications.specification_id');
+    $builder->where('category_specifications.category_id', $categoryId);
+    $query = $builder->get();
+
+    $specs = $query->getResultArray();
+
+    return $this->response->setJSON($specs);
+}
+
+
     public function add_product(){
         helper(['form', 'url']);
     
@@ -120,6 +136,7 @@ class AdminProducts extends Controller{
                     'spec_key' => $key,
                     'spec_value' => $value
                 ];
+                // Save each product space
                 $productSpaceModel->save($productSpaceData); // Save each product space
             }
         }
@@ -198,7 +215,7 @@ class AdminProducts extends Controller{
 
 
 
-        public function get_product_details($id)
+   /*      public function get_product_details($id)
         {
             $productModel = new \App\Models\ProductModel(); // adjust if needed
             $product = $productModel->find($id);
@@ -210,7 +227,7 @@ class AdminProducts extends Controller{
             }
         }
 
-        public function update_product()
+       public function update_product()
         {
             $productModel = new \App\Models\ProductModel();
             $id = $this->request->getPost('product_id');  
@@ -222,11 +239,56 @@ class AdminProducts extends Controller{
             ];
 
             if ($productModel->update($id, $data)) {
-                return redirect()->back()->with('message', 'Product updated successfully!');
+                return redirect()->back()->with('update_message', 'Product updated successfully!');
             } else {
-                return redirect()->back()->with('error', 'Update failed');
+                return redirect()->back()->with('update_error', 'Update failed');
+            }
+        }*/
+
+        public function get_product_details($id)
+        {
+            $productModel = new \App\Models\ProductModel();
+            $specModel = new \App\Models\ProductSpaceModel();
+        
+            $product = $productModel->find($id);
+            $specs = $specModel->where('product_id', $id)->findAll();
+        
+            return $this->response->setJSON([
+                'product' => $product,
+                'specs' => $specs
+            ]);
+        }
+        
+        public function update_product()
+    {
+        $productModel = new \App\Models\ProductModel();
+        $specModel = new \App\Models\ProductSpaceModel();
+
+        $id = $this->request->getPost('product_id');  
+
+        $data = [
+            'name'        => $this->request->getPost('name'),
+            'price'       => $this->request->getPost('price'),
+            'description' => $this->request->getPost('description'),
+        ];
+
+        $specUpdates = $this->request->getPost('specs');
+
+        $success = $productModel->update($id, $data);
+
+        if ($specUpdates && is_array($specUpdates)) {
+            foreach ($specUpdates as $specId => $specValue) {
+                $specModel->update($specId, ['spec_value' => $specValue]);
             }
         }
+
+        if ($success) {
+            return redirect()->back()->with('update_message', 'Product updated successfully!');
+        } else {
+            return redirect()->back()->with('update_error', 'Update failed');
+        }
+    }
+
 
         public function delete_product()
         {
@@ -241,7 +303,7 @@ class AdminProducts extends Controller{
         
                 // Delete related records
                 $db->table('product_sales')->where('product_id', $productId)->delete();
-                $db->table('product_specs')->where('product_id', $productId)->delete(); // Make sure this is correct
+                $db->table('product_specs')->where('product_id', $productId)->delete(); 
                 $db->table('user_cart')->where('product_id', $productId)->delete();
         
                 // Delete the product itself
@@ -254,7 +316,7 @@ class AdminProducts extends Controller{
                     return redirect()->back()->with('error', 'Failed to delete product due to a database error.');
                 }
         
-                return redirect()->back()->with('message', 'Product deleted successfully.');
+                return redirect()->to('/manageProducts')->with('message', 'Product deleted successfully.');
             } catch (\Exception $e) {
                 return redirect()->back()->with('error', 'An unexpected error occurred: ' . $e->getMessage());
             }

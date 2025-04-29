@@ -9,10 +9,6 @@ class Admin extends BaseController
 {
     public function index()
     {   
-        //echo view('layouts/header');
-        //echo session()->getFlashdata('message') ? '<p style="color: green;">'.session()->getFlashdata('message').'</p>' : '';
-        //echo view('admin/add_product');
-
         return view('admin/landing');
 
     }

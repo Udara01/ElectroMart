@@ -3,35 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Product Catalog</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    .card:hover .add-to-cart-btn {
-      opacity: 1;
-      visibility: visible;
-      transform: translateY(0);
-    }
-    .add-to-cart-btn {
-      transition: all 0.3s ease;
-      opacity: 0;
-      visibility: hidden;
-      transform: translateY(10px);
-    }
-    .discount-badge {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      background-color: red;
-      color: white;
-      padding: 5px 10px;
-      font-size: 0.9rem;
-      border-radius: 5px;
-      z-index: 1;
-    }
-    .card-img-wrapper {
-      position: relative;
-    }
-  </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <link rel="stylesheet" href="/asset/Styles/shop.css">
+  
+  
 </head>
 <body>
 <div class="container mt-4">
@@ -112,15 +90,6 @@
                                         <p class="card-text"><?= esc($product['description']) ?></p>
                                         <p class="card-text"><strong>Rs. <?= esc($product['price']) ?></strong></p>
                                     </div>
-                                    <!--
-                                    <ul class="small">
-                                        <?php /*foreach ($product_spaces as $spec) : ?>
-                                            <?php if ($spec['product_id'] == $product['id']) : ?>
-                                                <li><strong><?= esc($spec['spec_key']) ?>:</strong> <?= esc($spec['spec_value']) ?></li>
-                                            <?php endif; ?>
-                                        <?php endforeach;*/ ?>
-                                    </ul> 
-                                    <button class="btn btn-primary add-to-cart-btn mt-2">Add to Cart</button>-->
                                     <button
                                         class="btn btn-primary add-to-cart-btn mt-2"
                                         data-bs-toggle="modal"
@@ -130,12 +99,10 @@
                                         'name' => $product['name'],
                                         'description' => $product['description'],
                                         'price' => $product['price'],
-                                        'brand' => $product['brand_name'] ?? 'N/A',
                                         'image' => $product['image'] ? base_url('uploads/' . $product['image']) : 'https://placehold.co/600x400/png',
                                         'specs' => array_values(array_filter($product_spaces, fn($spec) => $spec['product_id'] == $product['id'])),
                                     ]), ENT_QUOTES, 'UTF-8') ?>"
                                     >View Details</button>
-
                                 </div>
                             </div>
                         </div>
@@ -147,6 +114,7 @@
         </div>
     </div>
 </div>
+
 <!-- Modal -->
 <div class="modal fade" id="productDetailModal" tabindex="-1" aria-labelledby="productDetailModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
@@ -167,44 +135,104 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('productDetailModal');
-    const modalFooter = modal.querySelector('.modal-footer'); // Get footer element
+    const modalFooter = modal.querySelector('.modal-footer');
+    const modalContent = document.getElementById('modalContent');
 
     modal.addEventListener('show.bs.modal', function (event) {
         const button = event.relatedTarget;
         const productData = JSON.parse(button.getAttribute('data-product'));
 
-        let specHTML = '<ul>';
+        
+        const today = new Date();// Adding the current date for the PDF
+        const formattedDate = today.toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        });
+
+        let specHTML = '<div class="specs-columns"><ul>';
         productData.specs.forEach(spec => {
             specHTML += `<li><strong>${spec.spec_key}:</strong> ${spec.spec_value}</li>`;
         });
-        specHTML += '</ul>';
+        specHTML += '</ul></div>';
 
         const content = `
+            <div class="pdf-header">
+                <h2>${productData.name}</h2>
+                <div class="subtitle">Product Details | ${formattedDate}</div>
+            </div>
             <div class="row">
                 <div class="col-md-6">
                     <img src="${productData.image}" class="img-fluid" alt="Product Image">
                 </div>
                 <div class="col-md-6">
-                    <h5>${productData.name}</h5>
-                    <p><strong>Brand:</strong> ${productData.brand}</p>
-                    <p><strong>Price:</strong> Rs. ${productData.price}</p>
+                    <p class="price"><strong>Price:</strong> Rs. ${productData.price}</p>
                     <p>${productData.description}</p>
-                    <h6>Specifications:</h6>
-                    ${specHTML}
                 </div>
+            </div>
+            <h6>Specifications</h6>
+            ${specHTML}
+            <div class="pdf-footer">
+                <p>© ${new Date().getFullYear()} ElectroMart. All rights reserved.</p>
             </div>
         `;
 
-       // document.getElementById('modalContent').innerHTML = content;
-       modalContent.innerHTML = content;
+        modalContent.innerHTML = content;
 
-        //Add to Cart button form
         modalFooter.innerHTML = `
-            <form method="post" action="<?= base_url('cart/add') ?>">
+            <form method="post" action="<?= base_url('cart/add') ?>" class="d-inline">
                 <input type="hidden" name="product_id" value="${productData.id}">
                 <button type="submit" class="btn btn-success">Add to Cart</button>
             </form>
+            <button type="button" class="btn btn-primary" id="downloadPdfBtn">
+                <i class="bi bi-file-earmark-pdf"></i> Download PDF
+            </button>
         `;
+
+        const downloadBtn = document.getElementById('downloadPdfBtn');
+        if (downloadBtn) {
+            downloadBtn.addEventListener('click', () => {
+                // Show loading state
+                downloadBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Generating PDF...';
+                downloadBtn.disabled = true;
+                
+                // Prevent scrolling issues
+                document.body.style.overflow = 'hidden';
+                window.scrollTo(0, 0);
+                
+                // Add PDF export class
+                modalContent.classList.add('pdf-export');
+
+                const opt = {
+                    margin: [0.2, 0.2, 0.2, 0.2], 
+                    filename: `${productData.name.replace(/\s+/g, '_')}_details.pdf`,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { 
+                        scale: 2,
+                        logging: false,
+                        useCORS: true,
+                        scrollY: 0, 
+                        windowHeight: document.getElementById('modalContent').scrollHeight
+                    },
+                    jsPDF: { 
+                        unit: 'in', 
+                        format: 'letter', 
+                        orientation: 'portrait',
+                        hotfixes: ["px_scaling"] 
+                    },
+                    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+                };
+
+                // Generate PDF
+                html2pdf().set(opt).from(modalContent).save().then(() => {
+                    // Clean up
+                    modalContent.classList.remove('pdf-export');
+                    downloadBtn.innerHTML = '<i class="bi bi-file-earmark-pdf"></i> Download PDF';
+                    downloadBtn.disabled = false;
+                    document.body.style.overflow = '';
+                });
+            });
+        }
     });
 });
 </script>

@@ -1,0 +1,153 @@
+
+.card:hover .add-to-cart-btn {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  .add-to-cart-btn {
+    transition: all 0.3s ease;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+  }
+  .discount-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: red;
+    color: white;
+    padding: 5px 10px;
+    font-size: 0.9rem;
+    border-radius: 5px;
+    z-index: 1;
+  }
+  .card-img-wrapper {
+    position: relative;
+  }
+  
+  /* PDF Export Styles */
+  #modalContent.pdf-export {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    padding: 10px 15px;
+    background: white;
+    color: #333;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  #modalContent.pdf-export .pdf-header {
+    text-align: center;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #eee;
+  }
+
+  #modalContent.pdf-export .pdf-header h2 {
+    color: #2c3e50;
+    margin: 0;
+    font-size: 20px;
+  }
+
+  #modalContent.pdf-export .pdf-header .subtitle {
+    color: #7f8c8d;
+    font-size: 12px;
+    margin-top: 2px;
+  }
+
+  #modalContent.pdf-export .row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 5px;
+    margin-bottom: 15px;
+  }
+
+  #modalContent.pdf-export img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 15px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+
+  #modalContent.pdf-export h5 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #2c3e50;
+    font-weight: 600;
+  }
+
+  #modalContent.pdf-export p {
+    font-size: 12px;
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+
+  #modalContent.pdf-export .price {
+    font-size: 16px;
+    font-weight: bold;
+    color: #e74c3c;
+    margin: 10px 0;
+  }
+
+  #modalContent.pdf-export .brand {
+    font-size: 14px;
+    color: #7f8c8d;
+    margin-bottom: 10px;
+  }
+
+  #modalContent.pdf-export h6 {
+    font-size: 16px;
+    margin: 15px 0 8px;
+    color: #2c3e50;
+    font-weight: 500;
+  }
+
+  #modalContent.pdf-export ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  #modalContent.pdf-export ul li {
+    background: #f8f9fa;
+    margin-bottom: 6px;
+    padding: 8px 10px;
+    border-radius: 4px;
+    border-left: 4px solid #3498db;
+    font-size: 12px;
+  }
+
+  #modalContent.pdf-export ul li strong {
+    color: #2c3e50;
+    min-width: 100px;
+    display: inline-block;
+  }
+
+  #modalContent.pdf-export .specs-columns {
+    column-count: 2;
+    column-gap: 15px;
+  }
+
+  #modalContent.pdf-export .pdf-footer {
+    text-align: center;
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+    font-size: 10px;
+    color: #95a5a6;
+  }
+
+  @media print {
+    #modalContent.pdf-export {
+      padding: 0;
+    }
+    #modalContent.pdf-export .specs-columns {
+      column-count: 2;
+      column-gap: 15px;
+    }
+    
+    #modalContent.pdf-export ul li {
+      break-inside: avoid;
+    }
+  }

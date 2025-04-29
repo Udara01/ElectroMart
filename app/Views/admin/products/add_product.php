@@ -26,7 +26,7 @@
                     </select>
                 </div>
 
-                <!-- Dynamic Specs Area -->
+                <!-- Dynamic Specification Area -->
                 <div class="mb-3">
                     <label class="form-label">Category Specs</label>
                     <div id="categorySpacesContainer" class="row g-2">
@@ -40,19 +40,16 @@
                     <input type="text" name="description" id="description" class="form-control" required>
                 </div>
 
-                <!-- Price -->
                 <div class="mb-3">
                     <label for="price" class="form-label">Price (LKR)</label>
                     <input type="number" name="price" id="price" class="form-control" step="0.01" required>
                 </div>
 
-                <!-- Image Upload -->
                 <div class="mb-4">
                     <label for="image" class="form-label">Product Image</label>
                     <input type="file" name="image" id="image" class="form-control" required>
                 </div>
 
-                <!-- Submit -->
                 <div class="text-end">
                     <button type="submit" class="btn btn-primary px-4">Save Product</button>
                 </div>
@@ -63,92 +60,42 @@
 
 
 <script>
-    
-   /* document.getElementById('categorySelect').addEventListener('change', function(){
-        var $selectedCategory = this.value; //this refers to the select element
 
-        let categorySpaces = [];
 
-        if($selectedCategory === 'Laptops') {
-            alert('You selected Laptops!');
-            categorySpaces = ['Brand', 'Model', 'Processor', 'RAM', 'Storage', 'Graphics Card', 'Screen Size'];
+document.getElementById('categorySelect').addEventListener('change', function () {
+    const selectedCategory = this.value;
+    const container = document.getElementById('categorySpacesContainer');
+    container.innerHTML = ''; // Clear previous
 
-        } else if ($selectedCategory === 'PC') {
-            alert('You selected PC!');
-            categorySpaces = ['Brand', 'Model', 'Processor', 'RAM', 'Storage', 'Graphics Card', 'Motherboard'];
+    if (selectedCategory) {
+        fetch(`<?= base_url('admin/getCategorySpecifications/') ?>${selectedCategory}`)
+            .then(response => response.json())
+            .then(specifications => {
+                specifications.forEach(spec => {
+                    const div = document.createElement('div');
+                    div.classList.add('col-md-6');
 
-        } else if ($selectedCategory === 'SmartPhone') {
-            alert('You selected SmartPhone!');
-            categorySpaces = ['Brand', 'Model', 'Processor', 'RAM', 'Storage', 'Camera', 'Battery'];
+                    const label = document.createElement('label');
+                    label.classList.add('form-label');
+                    label.innerText = spec.spec_name; 
 
-        } else if ($selectedCategory === 'PC Accessories') {
-            alert('You selected PC Accessories!');
-            let accessoryType = prompt("Enter the type of accessory (e.g., Mouse, Keyboard, etc.):");
-            categorySpaces = ['Brand', 'Model', 'Accessory Type', 'Connectivity', 'Color'];
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.name = `category_spaces[${spec.spec_name}]`;
+                    input.classList.add('form-control');
+                    input.required = true;
 
-        } else if ($selectedCategory === 'SmartWatch') {
-            alert('You selected SmartWatch!');
-            categorySpaces = ['Brand', 'Model', 'Processor', 'RAM', 'Storage', 'Battery Life'];
+                    div.appendChild(label);
+                    div.appendChild(input);
 
-        } else if ($selectedCategory === 'SmartTV') {
-            alert('You selected SmartTV!');
-            categorySpaces = ['Brand', 'Model', 'Screen Size', 'Resolution', 'Smart Features'];
+                    container.appendChild(div);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching specifications:', error);
+            });
+    }
+});
 
-        } else if ($selectedCategory === 'Tablets') {
-            alert('You selected Tablets!');
-        } else if ($selectedCategory === 'HeadPhones') {
-            alert('You selected HeadPhones!');
-        }   
-    })*/
 
-    document.getElementById('categorySelect').addEventListener('change', function () {
-        const selectedCategory = this.value;
-        const container = document.getElementById('categorySpacesContainer');
-        container.innerHTML = ''; // Clear previous inputs
-
-        let categorySpaces = [];
-
-        switch (selectedCategory) {
-            case '1':
-                categorySpaces = ['Brand', 'Model', 'Processor', 'RAM', 'Storage', 'Graphics Card', 'Screen Size'];
-                break;
-            case '2':
-                categorySpaces = ['Brand', 'Model', 'Processor', 'RAM', 'Storage', 'Graphics Card', 'Motherboard'];
-                break;
-            case '3':
-                categorySpaces = ['Brand', 'Model', 'Processor', 'RAM', 'Storage', 'Camera', 'Battery'];
-                break;
-            case '4':
-                let accessoryType = prompt("Enter the type of accessory (e.g., Mouse, Keyboard, etc.):");
-                categorySpaces = ['Brand', 'Model', 'Accessory Type', 'Connectivity', 'Color'];
-                break;
-            case '5':
-                categorySpaces = ['Brand', 'Model', 'Processor', 'RAM', 'Storage', 'Battery Life'];
-                break;
-            case 'SmartTV':
-                categorySpaces = ['Brand', 'Model', 'Screen Size', 'Resolution', 'Smart Features'];
-                break;
-            case 'Tablets':
-                categorySpaces = ['Brand', 'Model', 'Processor', 'RAM', 'Storage', 'Screen Size'];
-                break;
-            case 'HeadPhones':
-                categorySpaces = ['Brand', 'Model', 'Type', 'Connectivity', 'Battery Life'];
-                break;
-        }
-
-        // Dynamically create inputs for each category space
-        categorySpaces.forEach(space => {
-            const label = document.createElement('label');
-            label.innerText = space;
-
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.name = `category_spaces[${space}]`; // e.g., category_spaces[Brand]
-            input.required = true;
-
-            container.appendChild(label);
-            container.appendChild(input);
-            container.appendChild(document.createElement('br'));
-        });
-    });
 </script>

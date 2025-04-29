@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controllers;
+
 use CodeIgniter\Controller;
 use Config\Database;
 
@@ -10,13 +11,14 @@ class TestDB extends Controller
     {
         try {
             $db = Database::connect();
-            if ($db->connID) {
-                echo "✅ Database connected successfully!";
+            $query = $db->query('SELECT 1'); // simple query to test the connection
+            if ($query) {
+                echo "Database Connected Successfully!";
             } else {
-                echo "❌ Failed to connect to the database.";
+                echo "Failed to Connect Database.";
             }
         } catch (\Exception $e) {
-            echo "❌ Database error: " . $e->getMessage();
+            echo "Connection Error: " . $e->getMessage();
         }
     }
 }
